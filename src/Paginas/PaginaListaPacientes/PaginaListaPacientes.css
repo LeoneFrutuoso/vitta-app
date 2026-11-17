@@ -1,0 +1,11 @@
+.PaginaListaPacientes_root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+}
+
+.PaginaListaPacientes_root h1 {
+  color: #0b4628;
+  font-size: 1.6rem;
+}

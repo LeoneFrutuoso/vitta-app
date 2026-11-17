@@ -1,0 +1,26 @@
+.BotaoCustomizado_root {
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+}
+
+.BotaoCustomizado_primario {
+  background-color: #0b4628;
+  color: #ffffff;
+}
+
+.BotaoCustomizado_primario:hover {
+  background-color: #08331d;
+}
+
+.BotaoCustomizado_secundario {
+  background-color: #e2e8f0;
+  color: #1e293b;
+}
+
+.BotaoCustomizado_secundario:hover {
+  background-color: #cbd5e1;
+}

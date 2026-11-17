@@ -1,0 +1,14 @@
+.PaginaInicial_root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 24px;
+}
+
+.PaginaInicial_root h1 {
+  color: #0b4628;
+  font-size: 1.8rem;
+  text-align: center;
+}
