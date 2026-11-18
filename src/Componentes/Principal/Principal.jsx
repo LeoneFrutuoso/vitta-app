@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import "./Principal.css";
 import { IoArrowBackCircle } from "react-icons/io5";
