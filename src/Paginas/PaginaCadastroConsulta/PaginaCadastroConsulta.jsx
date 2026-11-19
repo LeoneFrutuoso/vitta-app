@@ -1,75 +1,106 @@
-import { useState } from "react";
+/* eslint-disable react-hooks/set-state-in-effect */
+import { useEffect, useState } from "react";
 import BotaoCustomizado from "../../Componentes/BotaoCustomizado/BotaoCustomizado";
-import Principal from "../../Componentes/Principal/Principal";
 import CampoCustomizado from "../../Componentes/CampoCustomizado/CampoCustomizado";
-import { FaTrash } from "react-icons/fa6";
-import "./PaginaCadastroConsulta.css";
-import {
-  buscarNoLocalStorage,
-  salvarNoLocalStorage,
-} from "../../Servicos/LocalStorageServico";
+import Principal from "../../Componentes/Principal/Principal";
 import { toast } from "react-toastify";
+import { buscarConsultas, salvarConsulta } from "../../Servicos/ConsultasServico";
+import { buscarPacientes } from "../../Servicos/PacientesServico";
+import { useNavigate, useParams } from "react-router-dom";
 
 function PaginaCadastroConsulta() {
-  const [descricaoConsulta, setDescricaoConsulta] = useState("");
-  const [consultas, setConsultas] = useState(
-    buscarNoLocalStorage("consultas") || []
-  );
+  const navigate = useNavigate();
+  const pacientes = buscarPacientes() || [];
+  const [formConsulta, setFormConsulta] = useState({
+    id: "",
+    pacienteId: "",
+    pacienteNome: "",
+    data: "",
+    horario: "",
+    especialidade: "",
+    observacoes: "",
+  });
 
-  const adicionarConsulta = () => {
-    if (descricaoConsulta.trim()) {
-      const novaConsulta = { id: Date.now(), descricao: descricaoConsulta };
-      const consultasAtualizadas = [...consultas, novaConsulta];
-      setConsultas(consultasAtualizadas);
-      setDescricaoConsulta("");
-      salvarNoLocalStorage("consultas", consultasAtualizadas);
-      toast.success("Consulta cadastrada com sucesso!");
-    } else {
-      toast.error("Preencha o campo Consulta!");
+  const params = useParams();
+  useEffect(() => {
+    if (params.id) {
+      const consultaParaEditar = buscarConsultas().find(
+        (item) => item.id === +params.id,
+      );
+      if (consultaParaEditar) {
+        setFormConsulta(consultaParaEditar);
+      }
     }
+  }, [params.id]);
+
+  const salvar = () => {
+    if (
+      !formConsulta.pacienteNome.trim() ||
+      !formConsulta.data.trim() ||
+      !formConsulta.horario.trim()
+    ) {
+      toast.error("Os campos paciente, data e horário são obrigatórios!");
+      return;
+    }
+
+    salvarConsulta(formConsulta);
+    toast.success("Consulta salva com sucesso!");
+    navigate("/lista-consultas");
   };
 
-  const removerConsulta = (id) => {
-    if (confirm("Deseja realmente remover a consulta?")) {
-      const consultasAtualizadas = consultas.filter((item) => item.id !== id);
-      setConsultas(consultasAtualizadas);
-      salvarNoLocalStorage("consultas", consultasAtualizadas);
-      toast.success("Consulta removida com sucesso!");
-    }
-  };
+  const titulo = formConsulta.id ? "Editar Consulta" : "Nova Consulta";
 
   return (
-    <Principal titulo="Cadastro de Consultas" voltarPara="/">
+    <Principal titulo={titulo} voltarPara="/">
       <CampoCustomizado
-        label="Descrição da Consulta"
-        type="text"
-        placeholder="Digite os detalhes da consulta"
-        value={descricaoConsulta}
-        onChange={(e) => setDescricaoConsulta(e.target.value)}
+        label="Paciente"
+        value={formConsulta.pacienteNome}
+        onChange={(e) => {
+          const selecionado = pacientes.find((p) => p.nome === e.target.value);
+          setFormConsulta({
+            ...formConsulta,
+            pacienteNome: e.target.value,
+            pacienteId: selecionado ? selecionado.id : "",
+          });
+        }}
+        maxLength={50}
+      />
+      <CampoCustomizado
+        label="Data"
+        type="date"
+        value={formConsulta.data}
+        onChange={(e) =>
+          setFormConsulta({ ...formConsulta, data: e.target.value })
+        }
+      />
+      <CampoCustomizado
+        label="Horário"
+        type="time"
+        value={formConsulta.horario}
+        onChange={(e) =>
+          setFormConsulta({ ...formConsulta, horario: e.target.value })
+        }
+      />
+      <CampoCustomizado
+        label="Especialidade"
+        value={formConsulta.especialidade}
+        onChange={(e) =>
+          setFormConsulta({ ...formConsulta, especialidade: e.target.value })
+        }
+        maxLength={50}
+      />
+      <CampoCustomizado
+        label="Observações"
+        value={formConsulta.observacoes}
+        onChange={(e) =>
+          setFormConsulta({ ...formConsulta, observacoes: e.target.value })
+        }
+        maxLength={120}
       />
 
-      <BotaoCustomizado tipo="primario" aoClicar={adicionarConsulta}>
-        Cadastrar Consulta
+      <BotaoCustomizado tipo="primario" aoClicar={salvar}>
+        Salvar
       </BotaoCustomizado>
-
-      {consultas.map((item) => {
-        return (
-          <div key={item.id} className="PaginaCadastroConsulta_item">
-            <span>{item.descricao}</span>
-            <FaTrash
-              color="red"
-              cursor="pointer"
-              onClick={() => removerConsulta(item.id)}
-            />
-          </div>
-        );
-      })}
-
-      {!consultas.length && (
-        <span className="PaginaCadastroConsulta_vazia">
-          Nenhuma consulta cadastrada.
-        </span>
-      )}
     </Principal>
   );
 }
