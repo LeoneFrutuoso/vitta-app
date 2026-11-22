@@ -1,11 +1,14 @@
-
 import { Link } from "react-router-dom";
 import "./Principal.css";
 import { IoArrowBackCircle } from "react-icons/io5";
 
 function Principal(props) {
+  const classeRoot = props.semBorda
+    ? "Principal_root Principal_semBorda"
+    : "Principal_root";
+
   return (
-    <main className="Principal_root">
+    <main className={classeRoot}>
       <div className="Principal_titulo">
         {props.voltarPara && (
           <Link to={props.voltarPara}>

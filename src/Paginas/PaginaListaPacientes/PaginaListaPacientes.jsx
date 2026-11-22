@@ -1,75 +1,108 @@
 import { useState } from "react";
 import Principal from "../../Componentes/Principal/Principal";
-import { buscarPacientes } from "../../Servicos/PacientesServico";
+import BotaoCustomizado from "../../Componentes/BotaoCustomizado/BotaoCustomizado";
 import "./PaginaListaPacientes.css";
-import { MdOutlineEmail } from "react-icons/md";
-import { MdEdit } from "react-icons/md";
-import { MdDelete } from "react-icons/md";
-import { MdAdd } from "react-icons/md";
-import { salvarNoLocalStorage } from "../../Servicos/LocalStorageServico";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-import CampoCustomizado from "../../Componentes/CampoCustomizado/CampoCustomizado";
+
+const pacientesIniciais = [
+  {
+    nome: "Ana Paula Silva",
+    telefone: "(48) 99999-1111",
+    email: "ana.silva@email.com",
+    cpf: "111.222.333-44",
+  },
+  {
+    nome: "Carlos Eduardo Souza",
+    telefone: "(48) 99999-2222",
+    email: "carlos.souza@email.com",
+    cpf: "222.333.444-55",
+  },
+  {
+    nome: "Mariana Costa",
+    telefone: "(48) 99999-3333",
+    email: "mariana.costa@email.com",
+    cpf: "333.444.555-66",
+  },
+];
 
 function PaginaListaPacientes() {
-  const navigate = useNavigate();
-  const [pacientes, setPacientes] = useState(buscarPacientes());
-  const [termoPesquisa, setTermoPesquisa] = useState("");
+  const [pacientes, setPacientes] = useState(pacientesIniciais);
+  const [mostrarFormulario, setMostrarFormulario] = useState(false);
+  const [nome, setNome] = useState("");
+  const [telefone, setTelefone] = useState("");
+  const [email, setEmail] = useState("");
+  const [cpf, setCpf] = useState("");
 
-  const excluirPaciente = (pacienteParaExcluir) => {
-    if (confirm(`Deseja excluir o paciente: ${pacienteParaExcluir.nome}?`)) {
-      const pacientesAtualizados = pacientes.filter(
-        (item) => item.id !== pacienteParaExcluir.id,
-      );
-      setPacientes(pacientesAtualizados);
-      salvarNoLocalStorage("pacientes", pacientesAtualizados);
-      toast.success("Paciente excluído com sucesso!");
-    }
-  };
+  function adicionarPaciente(evento) {
+    evento.preventDefault();
+    if (!nome.trim()) return;
 
-  const editarPaciente = (pacienteParaEditar) => {
-    navigate("/cadastro-paciente/" + pacienteParaEditar.id);
-  };
+    const novoPaciente = {
+      nome,
+      telefone,
+      email,
+      cpf,
+    };
 
-  const pacientesFiltrados = pacientes.filter((item) => {
-    return item.nome.toLowerCase().includes(termoPesquisa.toLowerCase());
-  });
+    setPacientes([...pacientes, novoPaciente]);
+    setNome("");
+    setTelefone("");
+    setEmail("");
+    setCpf("");
+    setMostrarFormulario(false);
+  }
 
   return (
     <Principal titulo="Lista de Pacientes" voltarPara="/">
-      <CampoCustomizado
-        type="search"
-        label="Pesquisar"
-        placeholder="Digite o nome do paciente"
-        value={termoPesquisa}
-        onChange={(e) => setTermoPesquisa(e.target.value)}
-      />
-
-      {pacientesFiltrados.map((item, index) => {
+      {pacientes.map((itemPaciente, index) => {
         return (
           <div key={index} className="PaginaListaPacientes_item">
-            <div>
-              <h3>{item.nome}</h3>
-              <span className="PaginaListaPacientes_item_email">
-                <MdOutlineEmail />
-                {item.email}
-              </span>
-            </div>
-
-            <div className="PaginaListaPacientes_item_acoes">
-              <MdEdit size={24} onClick={() => editarPaciente(item)} />
-              <MdDelete
-                size={24}
-                color="red"
-                onClick={() => excluirPaciente(item)}
-              />
-            </div>
+            <h3>{itemPaciente.nome}</h3>
+            <strong>Telefone:</strong> {itemPaciente.telefone}
+            <br />
+            <strong>Email:</strong> {itemPaciente.email}
+            <br />
+            <strong>CPF:</strong> {itemPaciente.cpf}
           </div>
         );
       })}
 
+      {mostrarFormulario && (
+        <form onSubmit={adicionarPaciente} className="PaginaListaPacientes_form">
+          <input
+            type="text"
+            placeholder="Nome completo"
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Telefone"
+            value={telefone}
+            onChange={(e) => setTelefone(e.target.value)}
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="CPF"
+            value={cpf}
+            onChange={(e) => setCpf(e.target.value)}
+          />
+          <BotaoCustomizado tipo="primario">Salvar</BotaoCustomizado>
+        </form>
+      )}
+
       <div className="PaginaListaPacientes_botaoAdicionar">
-        <MdAdd onClick={() => navigate("/cadastro-paciente")} />
+        <BotaoCustomizado
+          tipo="primario"
+          aoClicar={() => setMostrarFormulario(!mostrarFormulario)}
+        >
+          +
+        </BotaoCustomizado>
       </div>
     </Principal>
   );

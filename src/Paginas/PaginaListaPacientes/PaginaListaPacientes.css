@@ -1,11 +1,40 @@
-.PaginaListaPacientes_root {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 24px;
+.PaginaListaPacientes_item {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  background-color: #ffffff;
+  text-align: center;
 }
 
-.PaginaListaPacientes_root h1 {
-  color: #0b4628;
-  font-size: 1.6rem;
+.PaginaListaPacientes_item h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.PaginaListaPacientes_form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  background-color: #ffffff;
+}
+
+.PaginaListaPacientes_form input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #9ca3af;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.PaginaListaPacientes_botaoAdicionar {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
 }

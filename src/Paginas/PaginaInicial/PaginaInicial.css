@@ -1,16 +1,11 @@
 .PaginaInicial_container {
-  max-width: 390px;
-  min-height: 540px;
-  margin: 24px auto;
-  padding: 28px 20px;
-  border-radius: 34px;
-  border: 6px solid #1b4332;
-  background: linear-gradient(160deg, #f4f6f5 0%, #ffffff 55%, #e8f0ec 100%);
-  box-shadow: 0 20px 40px rgba(27, 67, 50, 0.16);
+  width: 100%;
+  min-height: 460px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: 24px;
+  box-sizing: border-box;
 }
 
 .PaginaInicial_topo {
@@ -37,14 +32,14 @@
 .PaginaInicial_gradeBotoes {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: 14px;
 }
 
 .PaginaInicial_gradeBotoes button {
   width: 100%;
-  min-height: 92px;
+  min-height: 112px;
   border-radius: 16px;
-  padding: 14px 12px;
+  padding: 16px 12px;
   font-size: 14px;
   font-weight: 600;
   line-height: 1.3;
